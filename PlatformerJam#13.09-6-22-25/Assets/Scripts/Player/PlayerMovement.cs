@@ -1,21 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
-{ // ####################### IMPORTANT ############## player must be on 0,0 coordinates for proper camera movement, idk why
-    [SerializeField] private float maxSpeed = 5f;
+{
+    [SerializeField] private float maxSpeed = 10f;
     [SerializeField] private float acceleration = 20f;
     [SerializeField] private float deceleration = 10f;
     [SerializeField] private float jumpForce = 10f;
 
     [Header("Ground check parameters")]
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private float groundCheckDistance = 1.1f;
+    [SerializeField] private float ceilingCheckDistance = 8f;
+
+    [Header("Rotation")]
+    [SerializeField] private float rotationDuration = 0.5f;
 
     private Rigidbody2D rb;
     [SerializeField] private bool isGrounded = false;
+    [SerializeField] private bool ceilingExists = false;
     private float horizontalInput;
+    private bool isRotating = false;
 
     private void Start()
     {
@@ -24,7 +29,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isRotating) return;
+
         CheckGrounded();
+        CheckCeiling();
         if (isGrounded)
         {
             if (horizontalInput != 0)
@@ -35,7 +43,6 @@ public class PlayerMovement : MonoBehaviour
                 float newXVelocity = rb.velocity.x + speedDiff * accelerationRate * Time.fixedDeltaTime;
 
                 newXVelocity = Mathf.Clamp(newXVelocity, -maxSpeed, maxSpeed);
-
                 rb.velocity = new Vector2(newXVelocity, rb.velocity.y);
             }
             else
@@ -48,11 +55,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (isGrounded) {
+        if (isGrounded)
+        {
             horizontalInput = Input.GetAxisRaw("Horizontal");
         }
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
             Jump();
+        }
+        if (Input.GetKeyDown(KeyCode.E) && ceilingExists && !isRotating && isGrounded) 
+        {
+            StartCoroutine(ChangeDirection());
         }
     }
 
@@ -62,16 +75,51 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, jumpForce + speedBoost);
     }
 
+    private IEnumerator ChangeDirection()
+    {
+        float speedBoost = Mathf.Abs(rb.velocity.x) / 2f;
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce * rb.gravityScale);
+
+        isRotating = true;
+        rb.gravityScale *= -1;
+
+        float elapsedTime = 0f;
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = startRotation * Quaternion.Euler(0, 0, 180);
+
+        while (elapsedTime < rotationDuration)
+        {
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / rotationDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = targetRotation;
+        isRotating = false;
+    }
+
     private void CheckGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+        Vector2 rayDirection = (rb.gravityScale > 0) ? Vector2.down : Vector2.up;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, groundCheckDistance, groundLayer);
         isGrounded = hit.collider != null;
     }
 
+    private void CheckCeiling()
+    {
+        Vector2 rayDirection = (rb.gravityScale > 0) ? Vector2.up : Vector2.down;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, ceilingCheckDistance, groundLayer);
+        ceilingExists = hit.collider != null;
+    }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
+        Vector2 rayDirection = (Application.isPlaying && rb != null && rb.gravityScale > 0) ? Vector2.down : Vector2.up;
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)rayDirection * groundCheckDistance);
+
+        Gizmos.color = Color.blue;
+        Vector2 ceilingDirection = (Application.isPlaying && rb != null && rb.gravityScale > 0) ? Vector2.up : Vector2.down;
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)ceilingDirection * ceilingCheckDistance);
     }
 }

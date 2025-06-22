@@ -14,7 +14,6 @@ public class CameraMovement : MonoBehaviour
     {
         target = GameObject.FindWithTag("Player");
         offset = transform.position - target.transform.position;
-        transform.position = target.transform.position;
         cam = GetComponent<Camera>();
     }
 
