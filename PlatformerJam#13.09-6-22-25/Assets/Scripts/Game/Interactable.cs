@@ -8,10 +8,15 @@ public class Interactable : MonoBehaviour
     [SerializeField] protected bool isActive = false;
     [SerializeField] protected GameObject ObjectsUI; // put canvas here
 
+    void Start()
+    {
+        ObjectsUI.SetActive(false);
+    }
+
 
     private void ChangeActive(bool active)
     {
-        isActive = active;
+        ObjectsUI.SetActive(active);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
