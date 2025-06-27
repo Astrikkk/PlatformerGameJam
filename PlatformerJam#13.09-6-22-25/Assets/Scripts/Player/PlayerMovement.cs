@@ -39,12 +39,16 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing = false;
     private float idleTimer = 0f;
     private bool wasMoving = false;
-
+    private SpriteRenderer spriteRenderer;
+    private bool justJumped = false;
     [SerializeField] private camController _cm;
+    private Animator animator;
 
-    private void Start()
+    private void Awake()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         CurrentStamina = maxStamina;
     }
 
@@ -60,7 +64,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (!isDashing)
         {
-            CheckGrounded();
+            if (!justJumped) CheckGrounded();
+            else Invoke("CheckGrounded", 1f);
             if (isGrounded)
             {
                 if (horizontalInput != 0)
@@ -80,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
                     rb.velocity = new Vector2(newXVelocity, rb.velocity.y);
                 }
             }
+            animator.SetBool("isWalking", Mathf.Abs(horizontalInput) > 0.1f);
         }
 
         CheckIdleState();
@@ -93,10 +99,12 @@ public class PlayerMovement : MonoBehaviour
             if (horizontalInput > 0f)
             {
                 _cm.transposer.m_ScreenX = _cm.rightOffset;
+                spriteRenderer.flipX = false;
             }
             else if (horizontalInput < 0f)
             {
                 _cm.transposer.m_ScreenX = _cm.leftOffset;
+                spriteRenderer.flipX = true;
             }
         }
         else if (rb.gravityScale < 0)
@@ -104,17 +112,19 @@ public class PlayerMovement : MonoBehaviour
             horizontalInput = Input.GetAxisRaw("Horizontal") * -1;
             if (horizontalInput > 0f)
             {
+                spriteRenderer.flipX = false;
                 _cm.transposer.m_ScreenX = _cm.rightOffset;
             }
             else if (horizontalInput < 0f)
             {
+                spriteRenderer.flipX = true;
                 _cm.transposer.m_ScreenX = _cm.leftOffset;
             }
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded && CurrentStamina >= jumpStaminaCost)
         {
-            Jump();
+            CallJump();
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -170,6 +180,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        justJumped = true;
+        isGrounded = false;
         if (rb.gravityScale > 0)
         {
             float speedBoost = Mathf.Abs(rb.velocity.x) / 2f;
@@ -183,14 +195,39 @@ public class PlayerMovement : MonoBehaviour
         ModifyStamina(-jumpStaminaCost);
     }
 
+    private void CallJump()
+    {
+        animator.SetTrigger("Jump");
+        Invoke("Jump", 0.3f);
+    }
+
     private void TryDash()
     {
         if (!isDashing && CurrentStamina >= dashStaminaCost && !isInvincible)
         {
+            animator.SetTrigger("DashWithAttack");
             StartCoroutine(Dash());
         }
     }
 
+    public void InvertGravity()
+    {
+        justJumped = true;
+        isGrounded = false;
+        animator.SetTrigger("Flip");
+        Invoke("Invert", 1.1f);
+    }
+    private void Invert()
+    {
+        spriteRenderer.flipY = !spriteRenderer.flipY;
+        spriteRenderer.flipX = !spriteRenderer.flipX;
+    }
+
+    private void Landed()
+    {
+        justJumped = false;
+        animator.SetTrigger("Land");
+    }
     private IEnumerator Dash()
     {
         isDashing = true;
@@ -239,6 +276,7 @@ public class PlayerMovement : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
         isGrounded = hit.collider != null;
+        if (!isGrounded) Landed();
     }
 
     private void OnDrawGizmos()

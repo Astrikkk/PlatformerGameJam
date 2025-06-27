@@ -7,6 +7,12 @@ public class gravityControl : MonoBehaviour
     [SerializeField] private camController _cm;
     [SerializeField] private float cooldownTime = 1.0f; 
     private bool isOnCooldown = false;
+    private PlayerMovement player;
+
+    private void Start()
+    {
+        player = FindAnyObjectByType<PlayerMovement>();
+    }
 
     public void InvertGravityForAllRigidbodies()
     {
@@ -36,6 +42,7 @@ public class gravityControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F) && !isOnCooldown)
         {
             InvertGravityForAllRigidbodies();
+            player.InvertGravity();
         }
     }
 }

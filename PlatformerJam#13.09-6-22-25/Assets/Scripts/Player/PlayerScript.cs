@@ -12,23 +12,32 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]private bool canEat;
     EnemyController enemyNear;
 
+    //private PlayerMovement playerMovement;
+    private Animator animator;
     private float nextShootTime;
     private bool playerInShootingRange;
 
+    private void Awake()
+    {
+        //animator = GetComponent<Animator>();
+    }
     private void Start()
     {
         CurrentHP = maxHP;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         hpBar.GetComponent<Scrollbar>().size = CurrentHP * 0.01f;
         if(CurrentHP < maxHP)
         {
             if(Input.GetKey(KeyCode.E))
             {
-                if(canEat)
+                if (canEat)
+                {
                     Eating();
+                    animator.SetTrigger("Attack");
+                }
             }
         }
         
