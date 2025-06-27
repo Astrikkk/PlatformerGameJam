@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -9,116 +8,130 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private bool isWarrior;
     [SerializeField] private float speed;
     [SerializeField] private float detectionRange = 5f;
-    [SerializeField] private float shootCooldown = 1f;
+    [SerializeField] private int spot = 0;
+    [SerializeField] private Transform[] moveSpots;
+    [SerializeField] private Transform player;
+
+    private bool isHiding = false;
+    private bool isChasing = false;
+    private float nextShootTime;
+
+    [Header("Combat Settings")]
+    [SerializeField] private float shootingInterval = 2f;
+    [SerializeField] private float shootingRange = 4f;
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Transform shootPoint;
-    [SerializeField] private LayerMask obstacleLayers;
-
-    private Vector3 dir;
-    private Transform player;
-    private bool playerDetected;
-    private float lastShootTime;
-
-    void Start()
-    {
-        dir = transform.right;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-    }
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private float projectileSpeed = 7f;
+    [SerializeField] private int projectileDamage = 1;
 
     void FixedUpdate()
     {
-        CheckForPlayer();
-        
-        if (playerDetected)
+        if (isDead) return;
+
+        if (isChasing) detectionRange = 20f;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRange)
         {
             if (isWarrior)
             {
-                WarriorBehavior();
+                isChasing = true;
+                ChasePlayer();
+                TryShoot();
             }
-            else
+            else if (!isHiding)
             {
-                FleeBehavior();
+
+                isHiding = true;
+                spot = 1; 
+                StartCoroutine(Hide());
             }
         }
         else
         {
-            Move();
-        }
-    }
-
-    void CheckForPlayer()
-    {
-        if (player == null) return;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer > detectionRange)
-        {
-            playerDetected = false;
-            return;
+            
+            if (!isHiding)
+            {
+                Patrol();
+            }
         }
 
-        Vector2 directionToPlayer = (player.position - transform.position).normalized;
-        RaycastHit2D hit = Physics2D.Raycast(
-            transform.position,
-            directionToPlayer,
-            detectionRange,
-            obstacleLayers
-        );
-
-
-        if (hit.collider == null || hit.collider.CompareTag("Player"))
-        {
-            playerDetected = true;
-            Debug.DrawRay(transform.position, directionToPlayer * detectionRange, Color.green);
-        }
-        else
-        {
-            playerDetected = false;
-            Debug.DrawRay(transform.position, directionToPlayer * detectionRange, Color.red);
-        }
-    }
-
-    void WarriorBehavior()
-    {
-        // Поворачиваемся к игроку
-        dir = (player.position - transform.position).normalized;
         
-        // Стреляем с задержкой
-        if (Time.time - lastShootTime > shootCooldown)
+        if (!isHiding && !isChasing)
+        {
+            Patrol();
+        }
+    }
+
+    void Patrol()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, moveSpots[spot].position, speed * Time.deltaTime);
+
+        if (Vector2.Distance(transform.position, moveSpots[spot].position) <= 1f)
+        {
+            if (spot == 1)
+                spot = 0;
+            else if (spot == 0)
+                spot = 1;
+        }
+    }
+
+    void ChasePlayer()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+    }
+
+    void TryShoot()
+    {
+        if (Time.time >= nextShootTime)
         {
             Shoot();
-            lastShootTime = Time.time;
+            nextShootTime = Time.time + shootingInterval;
         }
-    }
-
-    void FleeBehavior()
-    {
-        dir = (transform.position - player.position).normalized;
-        transform.position = Vector3.MoveTowards(transform.position, transform.position + dir, speed * Time.deltaTime);
     }
 
     void Shoot()
     {
-        if (projectilePrefab != null && shootPoint != null)
+        if (projectilePrefab == null || firePoint == null)
         {
-            Instantiate(projectilePrefab, shootPoint.position, Quaternion.LookRotation(Vector3.forward, dir));
+            Debug.LogWarning("Projectile prefab or fire point not assigned!");
+            return;
+        }
+
+        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+
+        Vector2 direction = (player.position - firePoint.position).normalized;
+
+        Projectile projectileScript = projectile.GetComponent<Projectile>();
+        if (projectileScript != null)
+        {
+            projectileScript.SetDirection(direction);
+            projectileScript.SetSpeed(projectileSpeed);
+            projectileScript.SetDamage(projectileDamage);
         }
     }
 
-    void Move()
+    IEnumerator Hide()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position + transform.up * 0.1f + transform.right * dir.x * 0.7f, 0.1f);
+        
+        while (Vector2.Distance(transform.position, moveSpots[spot].position) > 0.7f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, moveSpots[spot].position, speed*5f * Time.deltaTime);
+            yield return null;
+        }
 
-        if (colliders.Length > 0) dir *= -1f;
-        transform.position = Vector3.MoveTowards(transform.position, transform.position + dir, speed * Time.deltaTime);
+        
+        Debug.Log("Playing hide animation");
+        
     }
 
     public void StartDisappearing()
     {
-        StartCoroutine(Disappear());
+        StartCoroutine(Dissappear());
     }
 
-    public IEnumerator Disappear()
+    public IEnumerator Dissappear()
     {
         yield return new WaitForSeconds(0.7f);
         Destroy(gameObject);

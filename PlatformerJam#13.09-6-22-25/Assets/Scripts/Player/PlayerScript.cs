@@ -12,6 +12,9 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]private bool canEat;
     EnemyController enemyNear;
 
+    private float nextShootTime;
+    private bool playerInShootingRange;
+
     private void Start()
     {
         CurrentHP = maxHP;
