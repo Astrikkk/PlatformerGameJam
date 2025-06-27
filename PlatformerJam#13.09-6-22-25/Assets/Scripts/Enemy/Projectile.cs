@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
             PlayerScript playerscript = other.GetComponent<PlayerScript>();
             if (playerscript != null)
             {
-                playerscript.takeDamage(damage);
+                playerscript.takeDamage(damage, transform.position);
             }
             Destroy(gameObject);
         }

@@ -8,6 +8,6 @@ public class Obstacle : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         PlayerScript Hero = collision.GetComponent<PlayerScript>();
-        if(Hero != null )Hero.takeDamage(damageCost);
+        if(Hero != null )Hero.takeDamage(damageCost, transform.position);
     }
 }

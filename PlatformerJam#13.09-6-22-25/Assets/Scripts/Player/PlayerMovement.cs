@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement Settings")]
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float acceleration = 20f;
     [SerializeField] private float deceleration = 10f;
@@ -12,14 +13,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashForce = 15f;
     [SerializeField] private float dashDuration = 0.2f;
 
-    [Header("Ground check parameters")]
+    [Header("Ground Check")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 0.1f;
 
-    [Header("Idle detection")]
-    [SerializeField] private float idleTimeThreshold = 2f;
-
-    [Header("Stamina settings")]
+    [Header("Stamina Settings")]
     [SerializeField] private int maxStamina = 100;
     [SerializeField] private float staminaRegenRate = 10f;
     [SerializeField] private int dashStaminaCost = 20;
@@ -34,14 +32,12 @@ public class PlayerMovement : MonoBehaviour
     private Coroutine invincibilityCoroutine;
 
     private Rigidbody2D rb;
-    [SerializeField] private bool isGrounded = false;
+    private bool isGrounded = false;
     private float horizontalInput;
     private bool isDashing = false;
-    private float idleTimer = 0f;
-    private bool wasMoving = false;
     private SpriteRenderer spriteRenderer;
     private bool justJumped = false;
-    [SerializeField] private camController _cm;
+    private camController _cm;
     private Animator animator;
 
     private void Awake()
@@ -49,165 +45,109 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        _cm = Camera.main.GetComponent<camController>();
         CurrentStamina = maxStamina;
     }
 
     private void FixedUpdate()
     {
         staminaBar.GetComponent<Scrollbar>().size = CurrentStamina * 0.01f;
-        if (CurrentStamina < maxStamina && canRegenStm)
-            RegenerateStamina();
-        if (rb.gravityScale > 0)
-            groundCheckDistance = 1.1f;
-        else if (rb.gravityScale < 0)
-            groundCheckDistance = -1.1f;
+        if (CurrentStamina < maxStamina && canRegenStm) RegenerateStamina();
 
         if (!isDashing)
         {
             if (!justJumped) CheckGrounded();
-            else Invoke("CheckGrounded", 1f);
+            else Invoke("CheckGrounded", 0.5f);
+
             if (isGrounded)
             {
-                if (horizontalInput != 0)
-                {
-                    float targetSpeed = horizontalInput * maxSpeed;
-                    float speedDiff = targetSpeed - rb.velocity.x;
-                    float accelerationRate = (speedDiff > 0) ? acceleration : deceleration;
-                    float newXVelocity = rb.velocity.x + speedDiff * accelerationRate * Time.fixedDeltaTime;
-
-                    newXVelocity = Mathf.Clamp(newXVelocity, -maxSpeed, maxSpeed);
-
-                    rb.velocity = new Vector2(newXVelocity, rb.velocity.y);
-                }
-                else
-                {
-                    float newXVelocity = Mathf.Lerp(rb.velocity.x, 0f, deceleration * Time.fixedDeltaTime);
-                    rb.velocity = new Vector2(newXVelocity, rb.velocity.y);
-                }
+                HandleMovement();
             }
-            animator.SetBool("isWalking", Mathf.Abs(horizontalInput) > 0.1f);
         }
-
-        CheckIdleState();
     }
 
     private void Update()
     {
-        if (rb.gravityScale > 0)
-        {
-            horizontalInput = Input.GetAxisRaw("Horizontal");
-            if (horizontalInput > 0f)
-            {
-                _cm.transposer.m_ScreenX = _cm.rightOffset;
-                spriteRenderer.flipX = false;
-            }
-            else if (horizontalInput < 0f)
-            {
-                _cm.transposer.m_ScreenX = _cm.leftOffset;
-                spriteRenderer.flipX = true;
-            }
-        }
-        else if (rb.gravityScale < 0)
-        {
-            horizontalInput = Input.GetAxisRaw("Horizontal") * -1;
-            if (horizontalInput > 0f)
-            {
-                spriteRenderer.flipX = false;
-                _cm.transposer.m_ScreenX = _cm.rightOffset;
-            }
-            else if (horizontalInput < 0f)
-            {
-                spriteRenderer.flipX = true;
-                _cm.transposer.m_ScreenX = _cm.leftOffset;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && CurrentStamina >= jumpStaminaCost)
-        {
-            CallJump();
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            TryDash();
-        }
+        HandleInput();
     }
 
-
-    public void ModifyStamina(int amount)
+    private void HandleInput()
     {
-        CurrentStamina += amount;
+        horizontalInput = rb.gravityScale > 0 ?
+            Input.GetAxisRaw("Horizontal") :
+            -Input.GetAxisRaw("Horizontal");
+
+        if (horizontalInput != 0)
+        {
+            _cm.transposer.m_ScreenX = horizontalInput > 0 ? _cm.rightOffset : _cm.leftOffset;
+            spriteRenderer.flipX = horizontalInput < 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) TryJump();
+        if (Input.GetKeyDown(KeyCode.LeftShift)) TryDash();
     }
 
-    private void RegenerateStamina()
+    private void HandleMovement()
     {
-        bool isMoving = Mathf.Abs(horizontalInput) > 0.1f || Mathf.Abs(rb.velocity.x) > 0.1f;
-        if (!isMoving && !isDashing && isGrounded)
+        if (horizontalInput != 0)
         {
-            float regenAmount = staminaRegenRate * Time.fixedDeltaTime;
-            ModifyStamina(Mathf.RoundToInt(regenAmount));
+            float targetSpeed = horizontalInput * maxSpeed;
+            float speedDiff = targetSpeed - rb.velocity.x;
+            float accelerationRate = (speedDiff > 0) ? acceleration : deceleration;
+            float newXVelocity = rb.velocity.x + speedDiff * accelerationRate * Time.fixedDeltaTime;
+            rb.velocity = new Vector2(Mathf.Clamp(newXVelocity, -maxSpeed, maxSpeed), rb.velocity.y);
         }
+        else
+        {
+            rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0f, deceleration * Time.fixedDeltaTime), rb.velocity.y);
+        }
+
+        animator.SetBool("isWalking", Mathf.Abs(horizontalInput) > 0.1f);
     }
 
-    private void CheckIdleState()
+    private void TryJump()
     {
-        bool isMoving = Mathf.Abs(horizontalInput) > 0.1f || Mathf.Abs(rb.velocity.x) > 0.1f;
-
-        if (isMoving)
+        if (isGrounded && CurrentStamina >= jumpStaminaCost)
         {
-            idleTimer = 0f;
-            wasMoving = true;
-            canRegenStm = false;
+            animator.SetTrigger("Jump");
+            Invoke("Jump", 0.3f);
         }
-        else if (wasMoving)
-        {
-            idleTimer += Time.fixedDeltaTime;
-
-            if (idleTimer >= idleTimeThreshold)
-            {
-                OnIdleTooLong();
-                wasMoving = false;
-                idleTimer = 0f;
-            }
-        }
-    }
-
-    private void OnIdleTooLong()
-    {
-        _cm.camToCenter();
-        canRegenStm = true;
     }
 
     private void Jump()
     {
         justJumped = true;
         isGrounded = false;
-        if (rb.gravityScale > 0)
-        {
-            float speedBoost = Mathf.Abs(rb.velocity.x) / 2f;
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce + speedBoost);
-        }
-        else if (rb.gravityScale < 0)
-        {
-            float speedBoost = Mathf.Abs(rb.velocity.x) / 2f;
-            rb.velocity = new Vector2(rb.velocity.x, -jumpForce - speedBoost);
-        }
+        float speedBoost = Mathf.Abs(rb.velocity.x) / 2f;
+        rb.velocity = new Vector2(rb.velocity.x, (jumpForce + speedBoost) * Mathf.Sign(rb.gravityScale));
         ModifyStamina(-jumpStaminaCost);
-    }
-
-    private void CallJump()
-    {
-        animator.SetTrigger("Jump");
-        Invoke("Jump", 0.3f);
     }
 
     private void TryDash()
     {
         if (!isDashing && CurrentStamina >= dashStaminaCost && !isInvincible)
         {
-            animator.SetTrigger("DashWithAttack");
+            animator.SetTrigger("Dash");
             StartCoroutine(Dash());
         }
+    }
+
+    private IEnumerator Dash()
+    {
+        isDashing = true;
+        isInvincible = true;
+        ModifyStamina(-dashStaminaCost);
+
+        float dashDirection = horizontalInput != 0 ? Mathf.Sign(horizontalInput) : spriteRenderer.flipX ? -1 : 1;
+        rb.velocity = new Vector2(dashDirection * dashForce, 0f);
+
+        if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
+        invincibilityCoroutine = StartCoroutine(InvincibilityEffect());
+
+        yield return new WaitForSeconds(dashDuration);
+        isDashing = false;
+        yield return new WaitForSeconds(invincibilityDuration - dashDuration);
+        isInvincible = false;
     }
 
     public void InvertGravity()
@@ -217,6 +157,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetTrigger("Flip");
         Invoke("Invert", 1.1f);
     }
+
     private void Invert()
     {
         spriteRenderer.flipY = !spriteRenderer.flipY;
@@ -228,56 +169,41 @@ public class PlayerMovement : MonoBehaviour
         justJumped = false;
         animator.SetTrigger("Land");
     }
-    private IEnumerator Dash()
+
+    private void CheckGrounded()
     {
-        isDashing = true;
-        isInvincible = true;
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+        if (!isGrounded) Landed();
+    }
 
-        ModifyStamina(-dashStaminaCost);
+    private void RegenerateStamina()
+    {
+        bool isMoving = Mathf.Abs(horizontalInput) > 0.1f || Mathf.Abs(rb.velocity.x) > 0.1f;
+        if (!isMoving && !isDashing && isGrounded)
+        {
+            ModifyStamina(Mathf.RoundToInt(staminaRegenRate * Time.fixedDeltaTime));
+        }
+    }
 
-        float dashDirection = horizontalInput != 0 ? Mathf.Sign(horizontalInput) : transform.localScale.x > 0 ? 1 : -1;
-
-        rb.velocity = Vector2.zero;
-        rb.AddForce(new Vector2(dashDirection * dashForce, 0f), ForceMode2D.Impulse);
-
-        if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
-        invincibilityCoroutine = StartCoroutine(InvincibilityEffect());
-
-        yield return new WaitForSeconds(dashDuration);
-
-        isDashing = false;
-
-        yield return new WaitForSeconds(invincibilityDuration - dashDuration);
-        isInvincible = false;
+    public void ModifyStamina(int amount)
+    {
+        CurrentStamina = Mathf.Clamp(CurrentStamina + amount, 0, maxStamina);
     }
 
     private IEnumerator InvincibilityEffect()
     {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        float blinkSpeed = 0.1f;
-
         while (isInvincible)
         {
             spriteRenderer.color = new Color(1, 1, 1, 0.5f);
-            yield return new WaitForSeconds(blinkSpeed);
-            spriteRenderer.color = new Color(1, 1, 1, 1f);
-            yield return new WaitForSeconds(blinkSpeed);
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = Color.white;
+            yield return new WaitForSeconds(0.1f);
         }
-
-        spriteRenderer.color = Color.white;
     }
 
-    public bool IsInvincible()
-    {
-        return isInvincible;
-    }
-
-    private void CheckGrounded()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
-        isGrounded = hit.collider != null;
-        if (!isGrounded) Landed();
-    }
+    public bool IsInvincible() => isInvincible;
+    public bool IsGrounded() => isGrounded;
+    public bool IsDashing() => isDashing;
 
     private void OnDrawGizmos()
     {
