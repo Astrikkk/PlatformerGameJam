@@ -29,6 +29,8 @@ public class PlayerScript : MonoBehaviour
             }
         }
         
+        
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -46,7 +48,7 @@ public class PlayerScript : MonoBehaviour
 
     void Eating()
     {
-        enemyNear.startDissApearing();
+        enemyNear.StartDisappearing();
         float regenAmount = hpRegenRate * Time.fixedDeltaTime;
         ModifyHP(Mathf.RoundToInt(regenAmount));
     }
@@ -64,6 +66,15 @@ public class PlayerScript : MonoBehaviour
         }
         //anim
         ModifyHP(-amount);
+        if(CurrentHP <= 0)
+        {
+            Death();
+        }
+    }
 
+    void Death()
+    {
+        //anim
+        print("isDead");
     }
 }
