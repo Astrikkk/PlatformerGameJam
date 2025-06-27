@@ -960,10 +960,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2084802842}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00000023842, y: 17.22}
-  m_SizeDelta: {x: 1709.11, y: 766.66}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -1.1099854, y: 12.340088}
+  m_SizeDelta: {x: -302.39, y: -323.09003}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &597637580
 MonoBehaviour:
@@ -2817,10 +2817,10 @@ RectTransform:
   - {fileID: 2003605722}
   m_Father: {fileID: 2084802842}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -5.43, y: -397.48}
-  m_SizeDelta: {x: 1698.24, y: 62.74}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -1.1085205, y: 149.95999}
+  m_SizeDelta: {x: -302.40002, y: 47.850006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1937803823
 MonoBehaviour:
@@ -3079,7 +3079,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d93304dff2d6fe148ad19a245b17112f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 05d6b5c02b684e146ba412b0b34a9521, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3151,16 +3151,16 @@ MonoBehaviour:
     \nMain menu:\nChoose:\n(1) Start\n(2) Settings\n(3) Info\n(4) Exit"
   settingsString: 'SETTINGS: XION-X21
 
-    
+
 
     volume:
 
-    
+
 
     Options:
 
-    (1)
-    Change value
+    (1) Change
+    value
 
     (2) Return to main menu'
   infoString: "GAME - MISSION: XION-X21\r\nDevelopers - Astragor, Chipy, Nathan,
@@ -3484,7 +3484,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2084802843

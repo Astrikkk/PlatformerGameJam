@@ -124,7 +124,7 @@ MonoBehaviour:
   deceleration: 10
   jumpForce: 5
   dashForce: 15
-  dashDuration: 0.2
+  dashDuration: 0.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -198,7 +198,7 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.1}
+  m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.96875, y: 0.9375}
   m_Direction: 0
 --- !u!70 &2577154919116241108
@@ -233,8 +233,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.1}
-  m_Size: {x: 0.96875, y: 0.9375}
+  m_Offset: {x: 0, y: 8}
+  m_Size: {x: 0.8, y: 0.8}
   m_Direction: 0
 --- !u!95 &2626355824470333646
 Animator:
