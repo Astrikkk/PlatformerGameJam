@@ -51,7 +51,8 @@ public class PlayerCombat : MonoBehaviour
         lastAttackTime = Time.time;
         playerMovement.ModifyStamina(-attackStaminaCost);
         animator.SetTrigger("Attack");
-        StartCoroutine(AttackRoutine(1f));
+        AttackRoutine(1f);
+        isAttacking = false;
     }
 
     private void PerformDashAttack()
@@ -59,7 +60,8 @@ public class PlayerCombat : MonoBehaviour
         lastAttackTime = Time.time;
         playerMovement.ModifyStamina(-dashAttackStaminaCost);
         animator.SetTrigger("DashAttack");
-        StartCoroutine(AttackRoutine(1.5f));
+        AttackRoutine(1.5f);
+        isAttacking = false;
     }
 
     private void PerformJumpAttack()
@@ -67,13 +69,13 @@ public class PlayerCombat : MonoBehaviour
         lastAttackTime = Time.time;
         playerMovement.ModifyStamina(-jumpAttackStaminaCost);
         animator.SetTrigger("JumpAttack");
-        StartCoroutine(AttackRoutine(1.3f));
+        AttackRoutine(1.3f);
+        isAttacking = false;
     }
 
-    private IEnumerator AttackRoutine(float damageMultiplier)
+    private void AttackRoutine(float damageMultiplier)
     {
         isAttacking = true;
-        yield return new WaitForSeconds(0.2f); // Задержка перед ударом
 
         Vector2 attackPos = (Vector2)transform.position +
                           new Vector2(attackOffset.x * (spriteRenderer.flipX ? -1 : 1), attackOffset.y);
@@ -90,8 +92,6 @@ public class PlayerCombat : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(0.3f); // Время завершения анимации
-        isAttacking = false;
     }
 
     public bool IsAttacking() => isAttacking;

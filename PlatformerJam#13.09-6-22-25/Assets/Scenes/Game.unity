@@ -485,6 +485,7 @@ MonoBehaviour:
   spot: 0
   moveSpots: []
   player: {fileID: 0}
+  HPcount: 0
   shootingInterval: 2
   shootingRange: 4
   stoppingDistance: 3
@@ -752,6 +753,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 90384137}
   m_CullTransparentMesh: 1
+--- !u!1 &91878589 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5313807247217388133, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
+  m_PrefabInstance: {fileID: 694744126737079460}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &150342694
 GameObject:
   m_ObjectHideFlags: 0
@@ -4023,6 +4029,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cm: {fileID: 1589008261}
   cooldownTime: 5
+  enableRandomInversion: 1
+  minRandomDelay: 10
+  maxRandomDelay: 60
 --- !u!4 &1471198961
 Transform:
   m_ObjectHideFlags: 0
@@ -5123,6 +5132,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4005221228476271574, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
   m_PrefabInstance: {fileID: 694744126737079460}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1907245209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91878589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff392d7b8521c434d80cbd460138d6c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meleeDamage: 20
+  attackRange: 1
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  attackStaminaCost: 15
+  dashAttackStaminaCost: 25
+  jumpAttackStaminaCost: 20
+  attackCooldown: 0.5
+  attackOffset: {x: 0.5, y: 0}
 --- !u!1 &1926692309
 GameObject:
   m_ObjectHideFlags: 0
@@ -5901,6 +5932,10 @@ PrefabInstance:
       propertyPath: staminaBar
       value: 
       objectReference: {fileID: 48532709}
+    - target: {fileID: 1233118705992948092, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
+      propertyPath: idleTimeThreshold
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2577154919116241108, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
       propertyPath: m_Size.x
       value: 1.1
@@ -5972,7 +6007,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5313807247217388133, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1907245209}
   m_SourcePrefab: {fileID: 100100000, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
 --- !u!1001 &4956561492805023074
 PrefabInstance:
@@ -6136,14 +6174,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5289056194274076199, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5661148183368575655, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
       propertyPath: m_Name
       value: enemy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5661148183368575655, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5716912312062855978, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1907245201}
+    - target: {fileID: 5716912312062855978, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
+      propertyPath: HPcount
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5716912312062855978, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
       propertyPath: shootingRange
       value: 7

@@ -25,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject staminaBar;
     public int CurrentStamina;
     private bool canRegenStm;
+    private float idleTimer = 0f;
+    private bool wasMoving = false;
+    [SerializeField] private float idleTimeThreshold = 2f;
 
     [Header("Invincibility")]
     [SerializeField] private float invincibilityDuration = 0.5f;
@@ -37,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing = false;
     private SpriteRenderer spriteRenderer;
     private bool justJumped = false;
-    private camController _cm;
+    [SerializeField] private camController _cm;
     private Animator animator;
 
     private void Awake()
@@ -45,7 +48,6 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        _cm = Camera.main.GetComponent<camController>();
         CurrentStamina = maxStamina;
     }
 
@@ -64,6 +66,37 @@ public class PlayerMovement : MonoBehaviour
                 HandleMovement();
             }
         }
+
+        CheckIdleState();
+    }
+
+    private void CheckIdleState()
+    {
+        bool isMoving = Mathf.Abs(horizontalInput) > 0.1f || Mathf.Abs(rb.velocity.x) > 0.1f;
+
+        if (isMoving)
+        {
+            idleTimer = 0f;
+            wasMoving = true;
+            canRegenStm = false;
+        }
+        else if (wasMoving)
+        {
+            idleTimer += Time.fixedDeltaTime;
+
+            if (idleTimer >= idleTimeThreshold)
+            {
+                OnIdleTooLong();
+                wasMoving = false;
+                idleTimer = 0f;
+            }
+        }
+    }
+
+    private void OnIdleTooLong()
+    {
+        _cm.camToCenter();
+        canRegenStm = true;
     }
 
     private void Update()
@@ -83,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.flipX = horizontalInput < 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) TryJump();
+        if (Input.GetKeyDown(KeyCode.Space)) TryJump();
         if (Input.GetKeyDown(KeyCode.LeftShift)) TryDash();
     }
 
@@ -154,6 +187,7 @@ public class PlayerMovement : MonoBehaviour
     {
         justJumped = true;
         isGrounded = false;
+        groundCheckDistance = -groundCheckDistance;
         animator.SetTrigger("Flip");
         Invoke("Invert", 1.1f);
     }
@@ -178,7 +212,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void RegenerateStamina()
     {
-        bool isMoving = Mathf.Abs(horizontalInput) > 0.1f || Mathf.Abs(rb.velocity.x) > 0.1f;
+        bool isMoving = Mathf.Abs(horizontalInput) > 1f || Mathf.Abs(rb.velocity.x) > 1f;
         if (!isMoving && !isDashing && isGrounded)
         {
             ModifyStamina(Mathf.RoundToInt(staminaRegenRate * Time.fixedDeltaTime));

@@ -1,17 +1,25 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class gravityControl : MonoBehaviour
 {
     [SerializeField] private camController _cm;
-    [SerializeField] private float cooldownTime = 1.0f; 
+    [SerializeField] private float cooldownTime = 1.0f;
+    [SerializeField] private bool enableRandomInversion = false;
+    [SerializeField] private float minRandomDelay = 10f;
+    [SerializeField] private float maxRandomDelay = 60f;
+
     private bool isOnCooldown = false;
     private PlayerMovement player;
 
     private void Start()
     {
         player = FindAnyObjectByType<PlayerMovement>();
+
+        if (enableRandomInversion)
+        {
+            StartCoroutine(RandomInvertCoroutine());
+        }
     }
 
     public void InvertGravityForAllRigidbodies()
@@ -26,7 +34,6 @@ public class gravityControl : MonoBehaviour
         }
 
         _cm.changeGravity();
-
         StartCoroutine(Cooldown());
     }
 
@@ -37,12 +44,23 @@ public class gravityControl : MonoBehaviour
         isOnCooldown = false;
     }
 
-    void Update()
+    void Invert()
     {
-        if (Input.GetKeyDown(KeyCode.F) && !isOnCooldown)
+        InvertGravityForAllRigidbodies();
+        player.InvertGravity();
+    }
+
+    private IEnumerator RandomInvertCoroutine()
+    {
+        while (true)
         {
-            InvertGravityForAllRigidbodies();
-            player.InvertGravity();
+            float randomDelay = Random.Range(minRandomDelay, maxRandomDelay);
+            yield return new WaitForSeconds(randomDelay);
+
+            if (!isOnCooldown)
+            {
+                Invert();
+            }
         }
     }
 }

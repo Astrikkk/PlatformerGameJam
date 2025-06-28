@@ -15,6 +15,9 @@ public class EnemyController : MonoBehaviour
     private bool isHiding = false;
     private bool isChasing = false;
     private float nextShootTime;
+    public int HPcount;
+
+    private Rigidbody2D rb;
 
     [Header("Combat Settings")]
     [SerializeField] private float shootingInterval = 2f;
@@ -25,9 +28,16 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float projectileSpeed = 7f;
     [SerializeField] private int projectileDamage = 1;
 
+    void Start()
+    {
+        rb = gameObject.GetComponent<Rigidbody2D>();
+    }
+
     void FixedUpdate()
     {
         if (isDead) return;
+
+        if (HPcount <= 0) Death();
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -40,10 +50,6 @@ public class EnemyController : MonoBehaviour
                 if (distanceToPlayer > stoppingDistance + 0.2f)
                 {
                     ChasePlayer();
-                }
-                else
-                {
-                    StopChasing();
                 }
 
                 if (distanceToPlayer <= shootingRange)
@@ -86,16 +92,32 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void ModifyHP(int amount)
+    {
+        HPcount = Mathf.Clamp(HPcount + amount, 0, 100);
+    }
+
+    public void TakeDamage(int amount, Vector2 damageSourcePosition)
+    {
+
+        ModifyHP(-amount);
+        ApplyKnockback(damageSourcePosition);
+    }
+
+    private void ApplyKnockback(Vector2 damageSourcePosition)
+    {
+        Vector2 knockbackDirection = (Vector2)transform.position - damageSourcePosition;
+        knockbackDirection.Normalize();
+        rb.velocity = Vector2.zero;
+        rb.AddForce(knockbackDirection * 12f, ForceMode2D.Impulse);
+    }
+
     void ChasePlayer()
     {
         if (Vector3.Distance(transform.position, player.position) > stoppingDistance)
         {
             transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
         }
-    }
-
-    void StopChasing()
-    {
     }
 
     void TryShoot()
@@ -143,6 +165,12 @@ public class EnemyController : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, moveSpots[spot].position, speed * 5f * Time.deltaTime);
             yield return null;
         }
+    }
+
+    void Death()
+    {
+        //anim dead body
+        isDead = true;
     }
 
     public void StartDisappearing()
