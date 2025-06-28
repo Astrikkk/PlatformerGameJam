@@ -94,6 +94,7 @@ public class PlayerScript : MonoBehaviour
         knockbackDirection.Normalize();
         rb.velocity = Vector2.zero;
         rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * knockbackForce, ForceMode2D.Impulse);
     }
 
     private IEnumerator FlashRed()

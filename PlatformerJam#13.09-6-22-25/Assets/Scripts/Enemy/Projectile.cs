@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -10,7 +11,16 @@ public class Projectile : MonoBehaviour
     public void SetSpeed(float spd) => speed = spd;
     public void SetDamage(int dmg) => damage = dmg;
 
-    void Update()
+    private SpriteRenderer spriteRenderer;
+    private void Start()
+    {
+        spriteRenderer= GetComponent<SpriteRenderer>();
+        Invoke("DestroyObject", 5);
+    }
+
+
+
+    void FixedUpdate()
     {
         transform.Translate(direction * speed * Time.deltaTime);
     }
@@ -30,5 +40,11 @@ public class Projectile : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+
+    private void DestroyObject()
+    {
+        Destroy(gameObject);
     }
 }

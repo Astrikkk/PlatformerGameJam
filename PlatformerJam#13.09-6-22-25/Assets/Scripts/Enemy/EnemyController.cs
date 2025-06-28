@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -15,7 +16,10 @@ public class EnemyController : MonoBehaviour
     private bool isHiding = false;
     private bool isChasing = false;
     private float nextShootTime;
-    public int HPcount;
+    public int HpCount = 100;
+
+    private SpriteRenderer spriteRenderer;
+
 
     private Rigidbody2D rb;
 
@@ -31,15 +35,19 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        player = FindAnyObjectByType<PlayerScript>().transform;
     }
 
     void FixedUpdate()
     {
         if (isDead) return;
 
-        if (HPcount <= 0) Death();
+        if (HpCount <= 0) Death();
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        bool isLookingRight = player.position.x >= transform.position.x;
+        spriteRenderer.flipX = !isLookingRight;
 
         if (distanceToPlayer <= detectionRange)
         {
@@ -78,6 +86,7 @@ public class EnemyController : MonoBehaviour
             Patrol();
         }
     }
+    
 
     void Patrol()
     {
@@ -94,7 +103,7 @@ public class EnemyController : MonoBehaviour
 
     public void ModifyHP(int amount)
     {
-        HPcount = Mathf.Clamp(HPcount + amount, 0, 100);
+        HpCount = Mathf.Clamp(HpCount + amount, 0, 100);
     }
 
     public void TakeDamage(int amount, Vector2 damageSourcePosition)

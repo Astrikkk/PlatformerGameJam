@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2330187562194084240}
   - component: {fileID: 7831362246368350208}
   - component: {fileID: 1233118705992948092}
+  - component: {fileID: 1781129271172313385}
   - component: {fileID: 2061543349972136322}
   - component: {fileID: 4687977561172927705}
   - component: {fileID: 2577154919116241108}
@@ -105,8 +106,12 @@ MonoBehaviour:
   maxHP: 100
   hpRegenRate: 50
   hpBar: {fileID: 0}
+  knockbackForce: 5
+  flashDuration: 0.2
+  flashCount: 3
   CurrentHP: 0
   canEat: 0
+  deathPanel: {fileID: 0}
 --- !u!114 &1233118705992948092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,17 +133,38 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  groundCheckDistance: 1.1
-  idleTimeThreshold: 3
+  groundCheckDistance: 1.6
   maxStamina: 100
   staminaRegenRate: 50
   dashStaminaCost: 20
   jumpStaminaCost: 20
   staminaBar: {fileID: 0}
   CurrentStamina: 0
+  idleTimeThreshold: 3
   invincibilityDuration: 0.5
-  isGrounded: 0
   _cm: {fileID: 0}
+--- !u!114 &1781129271172313385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5313807247217388133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff392d7b8521c434d80cbd460138d6c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meleeDamage: 20
+  attackRange: 2
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  attackStaminaCost: 15
+  dashAttackStaminaCost: 25
+  jumpAttackStaminaCost: 20
+  attackCooldown: 0.5
+  attackOffset: {x: 0.5, y: 0}
 --- !u!50 &2061543349972136322
 Rigidbody2D:
   serializedVersion: 4
