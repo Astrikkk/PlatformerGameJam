@@ -153,7 +153,6 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = false;
         float speedBoost = Mathf.Abs(rb.velocity.x) / 2f;
         rb.velocity = new Vector2(rb.velocity.x, (jumpForce + speedBoost) * Mathf.Sign(rb.gravityScale));
-        ModifyStamina(-jumpStaminaCost);
     }
 
     private void TryDash()

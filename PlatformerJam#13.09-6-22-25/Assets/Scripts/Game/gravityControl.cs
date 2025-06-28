@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class gravityControl : MonoBehaviour
@@ -8,6 +9,8 @@ public class gravityControl : MonoBehaviour
     [SerializeField] private bool enableRandomInversion = false;
     [SerializeField] private float minRandomDelay = 10f;
     [SerializeField] private float maxRandomDelay = 60f;
+
+    private EnemyController[] Enemies;
 
     private bool isOnCooldown = false;
     private PlayerMovement player;
@@ -20,6 +23,8 @@ public class gravityControl : MonoBehaviour
         {
             StartCoroutine(RandomInvertCoroutine());
         }
+
+        Enemies = FindObjectsOfType<EnemyController>();
     }
 
     public void InvertGravityForAllRigidbodies()
@@ -48,6 +53,13 @@ public class gravityControl : MonoBehaviour
     {
         InvertGravityForAllRigidbodies();
         player.InvertGravity();
+        if (Enemies.Length  > 0)
+        {
+            foreach (EnemyController enemy in Enemies)
+            {
+                enemy.InvertGravity();
+            }
+        }
     }
 
     private IEnumerator RandomInvertCoroutine()

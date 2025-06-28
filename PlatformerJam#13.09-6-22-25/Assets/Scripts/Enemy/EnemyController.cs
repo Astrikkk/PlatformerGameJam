@@ -19,6 +19,7 @@ public class EnemyController : MonoBehaviour
     public int HpCount = 100;
 
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
 
 
     private Rigidbody2D rb;
@@ -34,6 +35,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         player = FindAnyObjectByType<PlayerScript>().transform;
@@ -54,6 +56,7 @@ public class EnemyController : MonoBehaviour
             if (isWarrior)
             {
                 isChasing = true;
+                animator.SetBool("isMoving", true);
 
                 if (distanceToPlayer > stoppingDistance + 0.2f)
                 {
@@ -75,6 +78,8 @@ public class EnemyController : MonoBehaviour
         else
         {
             isChasing = false;
+            animator.SetBool("isMoving", false);
+
             if (!isHiding)
             {
                 Patrol();
@@ -101,6 +106,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void InvertGravity()
+    {
+        spriteRenderer.flipY = !spriteRenderer.flipY;
+    }
+
     public void ModifyHP(int amount)
     {
         HpCount = Mathf.Clamp(HpCount + amount, 0, 100);
@@ -118,7 +128,7 @@ public class EnemyController : MonoBehaviour
         Vector2 knockbackDirection = (Vector2)transform.position - damageSourcePosition;
         knockbackDirection.Normalize();
         rb.velocity = Vector2.zero;
-        rb.AddForce(knockbackDirection * 12f, ForceMode2D.Impulse);
+        rb.AddForce(knockbackDirection * 5f, ForceMode2D.Impulse);
     }
 
     void ChasePlayer()
@@ -134,6 +144,7 @@ public class EnemyController : MonoBehaviour
         if (Time.time >= nextShootTime && Vector3.Distance(transform.position, player.position) <= shootingRange)
         {
             Shoot();
+            animator.SetTrigger("Attacking");
             nextShootTime = Time.time + shootingInterval;
         }
     }
@@ -159,7 +170,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb != null)
             {
                 rb.velocity = direction * projectileSpeed;
@@ -179,7 +190,9 @@ public class EnemyController : MonoBehaviour
     void Death()
     {
         //anim dead body
+        animator.SetTrigger("Die");
         isDead = true;
+        StartDisappearing();
     }
 
     public void StartDisappearing()
@@ -189,7 +202,7 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator Dissappear()
     {
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 }

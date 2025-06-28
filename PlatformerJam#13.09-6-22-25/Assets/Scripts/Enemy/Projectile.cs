@@ -11,10 +11,8 @@ public class Projectile : MonoBehaviour
     public void SetSpeed(float spd) => speed = spd;
     public void SetDamage(int dmg) => damage = dmg;
 
-    private SpriteRenderer spriteRenderer;
     private void Start()
     {
-        spriteRenderer= GetComponent<SpriteRenderer>();
         Invoke("DestroyObject", 5);
     }
 

@@ -35,11 +35,11 @@ public class PlayerCombat : MonoBehaviour
             {
                 PerformDashAttack();
             }
-            else if (!playerMovement.IsGrounded() && playerMovement.CurrentStamina >= jumpAttackStaminaCost)
+            else if (!playerMovement.IsGrounded())
             {
                 PerformJumpAttack();
             }
-            else if (playerMovement.CurrentStamina >= attackStaminaCost)
+            else
             {
                 PerformRegularAttack();
             }
@@ -49,7 +49,6 @@ public class PlayerCombat : MonoBehaviour
     private void PerformRegularAttack()
     {
         lastAttackTime = Time.time;
-        playerMovement.ModifyStamina(-attackStaminaCost);
         animator.SetTrigger("Attack");
         AttackRoutine(1f);
         isAttacking = false;

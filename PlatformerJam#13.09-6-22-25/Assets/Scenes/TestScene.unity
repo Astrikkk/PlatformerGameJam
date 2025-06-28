@@ -164,18 +164,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5073263005551679291, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5073263005551679291, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5073263005551679291, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5073263005551679291, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
       propertyPath: m_LocalPosition.x
       value: 13.768709
       objectReference: {fileID: 0}
@@ -215,17 +203,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5073263005551679291, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5661148183368575655, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
       propertyPath: m_Name
       value: enemy (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5716912312062855978, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
-      propertyPath: moveSpots.Array.size
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5716912312062855978, guid: 7e80d6ec2ec9e044faad598d36490617, type: 3}
       propertyPath: moveSpots.Array.data[0]
@@ -653,6 +633,14 @@ PrefabInstance:
       propertyPath: staminaBar
       value: 
       objectReference: {fileID: 1778801036}
+    - target: {fileID: 1781129271172313385, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1781129271172313385, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
+      propertyPath: attackRange
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2577154919116241108, guid: f2b399b96d09c514e9076e74f56ac538, type: 3}
       propertyPath: m_Size.x
       value: 0.8
