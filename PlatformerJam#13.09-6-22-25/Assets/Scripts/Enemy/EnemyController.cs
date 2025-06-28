@@ -15,20 +15,29 @@ public class EnemyController : MonoBehaviour
     private bool isHiding = false;
     private bool isChasing = false;
     private float nextShootTime;
+    public int HPcount;
+
+    private Rigidbody2D rb;
 
     [Header("Combat Settings")]
     [SerializeField] private float shootingInterval = 2f;
     [SerializeField] private float shootingRange = 4f;
+    [SerializeField] private float stoppingDistance = 3f;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float projectileSpeed = 7f;
     [SerializeField] private int projectileDamage = 1;
 
+    void Start()
+    {
+        rb = gameObject.GetComponent<Rigidbody2D>();
+    }
+
     void FixedUpdate()
     {
         if (isDead) return;
 
-        if (isChasing) detectionRange = 20f;
+        if (HPcount <= 0) Death();
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -37,27 +46,33 @@ public class EnemyController : MonoBehaviour
             if (isWarrior)
             {
                 isChasing = true;
-                ChasePlayer();
-                TryShoot();
+
+                if (distanceToPlayer > stoppingDistance + 0.2f)
+                {
+                    ChasePlayer();
+                }
+
+                if (distanceToPlayer <= shootingRange)
+                {
+                    TryShoot();
+                }
             }
             else if (!isHiding)
             {
-
                 isHiding = true;
-                spot = 1; 
+                spot = 1;
                 StartCoroutine(Hide());
             }
         }
         else
         {
-            
+            isChasing = false;
             if (!isHiding)
             {
                 Patrol();
             }
         }
 
-        
         if (!isHiding && !isChasing)
         {
             Patrol();
@@ -77,14 +92,37 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void ModifyHP(int amount)
+    {
+        HPcount = Mathf.Clamp(HPcount + amount, 0, 100);
+    }
+
+    public void TakeDamage(int amount, Vector2 damageSourcePosition)
+    {
+
+        ModifyHP(-amount);
+        ApplyKnockback(damageSourcePosition);
+    }
+
+    private void ApplyKnockback(Vector2 damageSourcePosition)
+    {
+        Vector2 knockbackDirection = (Vector2)transform.position - damageSourcePosition;
+        knockbackDirection.Normalize();
+        rb.velocity = Vector2.zero;
+        rb.AddForce(knockbackDirection * 12f, ForceMode2D.Impulse);
+    }
+
     void ChasePlayer()
     {
-        transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+        if (Vector3.Distance(transform.position, player.position) > stoppingDistance)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+        }
     }
 
     void TryShoot()
     {
-        if (Time.time >= nextShootTime)
+        if (Time.time >= nextShootTime && Vector3.Distance(transform.position, player.position) <= shootingRange)
         {
             Shoot();
             nextShootTime = Time.time + shootingInterval;
@@ -110,20 +148,29 @@ public class EnemyController : MonoBehaviour
             projectileScript.SetSpeed(projectileSpeed);
             projectileScript.SetDamage(projectileDamage);
         }
+        else
+        {
+            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = direction * projectileSpeed;
+            }
+        }
     }
 
     IEnumerator Hide()
     {
-        
         while (Vector2.Distance(transform.position, moveSpots[spot].position) > 0.7f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, moveSpots[spot].position, speed*5f * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, moveSpots[spot].position, speed * 5f * Time.deltaTime);
             yield return null;
         }
+    }
 
-        
-        Debug.Log("Playing hide animation");
-        
+    void Death()
+    {
+        //anim dead body
+        isDead = true;
     }
 
     public void StartDisappearing()
