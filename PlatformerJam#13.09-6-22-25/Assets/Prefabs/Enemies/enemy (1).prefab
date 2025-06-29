@@ -151,6 +151,9 @@ MonoBehaviour:
   firePoint: {fileID: 4369598467670036469}
   projectileSpeed: 7
   projectileDamage: 10
+  flashDuration: 0.2
+  flashCount: 3
+  deadSprite: {fileID: 610592731, guid: 342bbc2862518df4f9be923ee83cdf5a, type: 3}
 --- !u!50 &1980185056687474319
 Rigidbody2D:
   serializedVersion: 4
@@ -210,9 +213,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.12}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.29
 --- !u!58 &6762196790709128012
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -247,7 +250,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.93
 --- !u!95 &1562570562971132744
 Animator:
   serializedVersion: 5

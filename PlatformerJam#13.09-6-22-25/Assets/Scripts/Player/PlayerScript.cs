@@ -22,6 +22,7 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody2D rb;
     private Color originalColor;
     private bool isFlashing = false;
+    public bool isDead = false;
 
     private void Awake()
     {
@@ -36,7 +37,7 @@ public class PlayerScript : MonoBehaviour
         originalColor = spriteRenderer.color;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         hpBar.GetComponent<Scrollbar>().size = CurrentHP * 0.01f;
         if (CurrentHP < maxHP && canEat && Input.GetKey(KeyCode.E))
@@ -115,6 +116,7 @@ public class PlayerScript : MonoBehaviour
         animator.SetTrigger("Die");
         deathPanel.SetActive(true);
         GetComponent<PlayerMovement>().enabled = false;
+        GetComponent<Animator>().enabled = false;
         GetComponent<PlayerCombat>().enabled = false;
         this.enabled = false;
     }

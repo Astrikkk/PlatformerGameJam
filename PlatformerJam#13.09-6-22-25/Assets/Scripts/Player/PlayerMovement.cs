@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private bool justJumped = false;
     [SerializeField] private camController _cm;
     private Animator animator;
+    private PlayerScript playerScript;
 
     private void Awake()
     {
@@ -49,10 +50,12 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         CurrentStamina = maxStamina;
+        playerScript = GetComponent<PlayerScript>();
     }
 
     private void FixedUpdate()
     {
+        if (playerScript.isDead) return;
         staminaBar.GetComponent<Scrollbar>().size = CurrentStamina * 0.01f;
         if (CurrentStamina < maxStamina && canRegenStm) RegenerateStamina();
 
@@ -72,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIdleState()
     {
+        if (playerScript.isDead) return;
         bool isMoving = Mathf.Abs(horizontalInput) > 0.1f || Mathf.Abs(rb.velocity.x) > 0.1f;
 
         if (isMoving)
@@ -122,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (playerScript.isDead) return;
         if (horizontalInput != 0)
         {
             float targetSpeed = horizontalInput * maxSpeed;
@@ -140,6 +145,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void TryJump()
     {
+        if (playerScript.isDead) return;
         if (isGrounded && CurrentStamina >= jumpStaminaCost)
         {
             animator.SetTrigger("Jump");
@@ -157,6 +163,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void TryDash()
     {
+        if (playerScript.isDead) return;
         if (!isDashing && CurrentStamina >= dashStaminaCost && !isInvincible)
         {
             animator.SetTrigger("Dash");
@@ -184,6 +191,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void InvertGravity()
     {
+        if (playerScript.isDead) return;
         justJumped = true;
         isGrounded = false;
         groundCheckDistance = -groundCheckDistance;
@@ -199,6 +207,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Landed()
     {
+        if (playerScript.isDead) return;
         justJumped = false;
         animator.SetTrigger("Land");
     }
@@ -237,10 +246,4 @@ public class PlayerMovement : MonoBehaviour
     public bool IsInvincible() => isInvincible;
     public bool IsGrounded() => isGrounded;
     public bool IsDashing() => isDashing;
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
-    }
 }

@@ -29,7 +29,8 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && Time.time - lastAttackTime >= attackCooldown)
+        if (GetComponent<PlayerScript>().isDead) return;
+        if (Input.GetKeyDown(KeyCode.F) && Time.time - lastAttackTime >= attackCooldown)
         {
             if (playerMovement.IsDashing() && playerMovement.CurrentStamina >= dashAttackStaminaCost)
             {
@@ -94,14 +95,4 @@ public class PlayerCombat : MonoBehaviour
     }
 
     public bool IsAttacking() => isAttacking;
-
-    private void OnDrawGizmosSelected()
-    {
-        if (spriteRenderer == null) return;
-
-        Vector2 attackPos = (Vector2)transform.position +
-                          new Vector2(attackOffset.x * (spriteRenderer.flipX ? -1 : 1), attackOffset.y);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPos, attackRange);
-    }
 }
