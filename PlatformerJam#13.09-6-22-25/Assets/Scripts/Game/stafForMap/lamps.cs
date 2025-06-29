@@ -1,24 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class lamps : MonoBehaviour
 {
-    [SerializeField] private float speed = 1f;
-    private int direction = 1;
+    [SerializeField] private float speed = 0.5f;
+    [SerializeField] private int direction = 1;
+    [SerializeField] private Sprite spriteOff;
+    [SerializeField] private Sprite spriteOn;
+    SpriteRenderer m_SpriteRenderer;
+
+    void Start()
+    {
+        m_SpriteRenderer = transform.parent.gameObject.GetComponent<SpriteRenderer>();
+    }
 
     void Update()
     {
-        gameObject.GetComponent<Light>().intensity += direction * speed * Time.deltaTime;
+        gameObject.GetComponent<Light2D>().intensity += direction * speed * Time.deltaTime;
         
-        if (gameObject.GetComponent<Light>().intensity >= 0.7f)
+        if (gameObject.GetComponent<Light2D>().intensity >= 3f)
         {
-            gameObject.GetComponent<Light>().intensity = 0.7f;
+            m_SpriteRenderer.sprite = spriteOn;
+            gameObject.GetComponent<Light2D>().intensity = 3f;
             direction = -1;
         }
-        else if (gameObject.GetComponent<Light>().intensity <= 0f)
+        else if (gameObject.GetComponent<Light2D>().intensity <= 0f)
         {
-            gameObject.GetComponent<Light>().intensity = 0f;
+            m_SpriteRenderer.sprite = spriteOff;
+            gameObject.GetComponent<Light2D>().intensity = 0f;
             direction = 1;
         }
 
@@ -26,6 +37,6 @@ public class lamps : MonoBehaviour
 
     public float GetCurrentValue()
     {
-        return gameObject.GetComponent<Light>().intensity;
+        return gameObject.GetComponent<Light2D>().intensity;
     }
 }

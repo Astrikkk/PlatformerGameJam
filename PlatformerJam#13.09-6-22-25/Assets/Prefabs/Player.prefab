@@ -12,11 +12,13 @@ GameObject:
   - component: {fileID: 2330187562194084240}
   - component: {fileID: 7831362246368350208}
   - component: {fileID: 1233118705992948092}
+  - component: {fileID: 6956895946857389296}
   - component: {fileID: 1781129271172313385}
   - component: {fileID: 2061543349972136322}
   - component: {fileID: 4687977561172927705}
   - component: {fileID: 2577154919116241108}
   - component: {fileID: 2626355824470333646}
+  - component: {fileID: 6678737470990375167}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -59,7 +61,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 29f5893d6b5442d4e9fa1f8936b68eb6, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,7 +87,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 0.96875, y: 0.9375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -106,7 +108,7 @@ MonoBehaviour:
   maxHP: 100
   hpRegenRate: 50
   hpBar: {fileID: 0}
-  knockbackForce: 5
+  knockbackForce: 20
   flashDuration: 0.2
   flashCount: 3
   CurrentHP: 0
@@ -140,9 +142,31 @@ MonoBehaviour:
   jumpStaminaCost: 20
   staminaBar: {fileID: 0}
   CurrentStamina: 0
-  idleTimeThreshold: 3
+  idleTimeThreshold: 2
   invincibilityDuration: 0.5
   _cm: {fileID: 0}
+--- !u!114 &6956895946857389296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5313807247217388133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff392d7b8521c434d80cbd460138d6c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meleeDamage: 20
+  attackRange: 1
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  attackStaminaCost: 15
+  dashAttackStaminaCost: 25
+  jumpAttackStaminaCost: 20
+  attackCooldown: 0.5
+  attackOffset: {x: 0.5, y: 0}
 --- !u!114 &1781129271172313385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,8 +283,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 8}
-  m_Size: {x: 0.8, y: 0.8}
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1.1, y: 1.1}
   m_Direction: 0
 --- !u!95 &2626355824470333646
 Animator:
@@ -283,3 +307,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6678737470990375167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5313807247217388133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 1
+  m_ApplyToSortingLayers: b1886a2a000000007d53ec7a
+  m_ShapePath:
+  - {x: -0.484375, y: -0.46875, z: 0}
+  - {x: -0.4865352, y: 0.47307038, z: 0}
+  - {x: 0.484375, y: 0.46875, z: 0}
+  - {x: 0.49737418, y: -0.05316603, z: 0}
+  - {x: 0.31591588, y: -0.014282107, z: 0}
+  - {x: 0.39368373, y: -0.24110508, z: 0}
+  - {x: 0.4325676, y: -0.42472363, z: 0}
+  - {x: 0.13874008, y: -0.46875, z: 0}
+  m_ShapePathHash: 19334876
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 30626
+  m_LocalBounds:
+    m_Center: {x: 0.0054194927, y: 0.0021601915, z: 0}
+    m_Extent: {x: 0.49195468, y: 0.4709102, z: 0}
