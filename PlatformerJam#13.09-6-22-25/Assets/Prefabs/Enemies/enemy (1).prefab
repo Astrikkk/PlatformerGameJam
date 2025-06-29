@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 3782836355473925164}
   - component: {fileID: 6762196790709128012}
   - component: {fileID: 1562570562971132744}
+  - component: {fileID: 6343234569675614795}
   m_Layer: 7
   m_Name: enemy (1)
   m_TagString: Untagged
@@ -89,7 +90,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 29f5893d6b5442d4e9fa1f8936b68eb6, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,7 +110,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -198255553, guid: 342bbc2862518df4f9be923ee83cdf5a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -272,3 +273,35 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6343234569675614795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5661148183368575655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: b1886a2a000000007d53ec7a
+  m_ShapePath:
+  - {x: -0.24460888, y: -0.4917612, z: 0}
+  - {x: -0.33523178, y: 0.19517899, z: 0}
+  - {x: -0.22593307, y: 0.46189213, z: 0}
+  - {x: -0.0025434494, y: 0.45880795, z: 0}
+  - {x: 0.13655758, y: 0.00054073334, z: 0}
+  - {x: 0.12927055, y: -0.47528458, z: 0}
+  m_ShapePathHash: -1954425571
+  m_Mesh: {fileID: 0}
+  m_InstanceId: -15824
+  m_LocalBounds:
+    m_Center: {x: -0.0993371, y: -0.01493454, z: 0}
+    m_Extent: {x: 0.23589468, y: 0.47682667, z: 0}

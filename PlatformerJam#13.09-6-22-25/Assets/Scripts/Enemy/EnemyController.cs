@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public bool isEdible;
     public bool isDead;
     [SerializeField] private bool isWarrior;
+    [SerializeField] private bool isEnemy;
     [SerializeField] private float speed;
     [SerializeField] private float detectionRange = 5f;
     [SerializeField] private int spot = 0;
@@ -50,6 +51,15 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
+
+        if (!isEnemy)
+        {
+            if (HpCount <= 0)
+                Destroy(gameObject);
+            else
+                return;
+
+        }
         if (isDead)
         {
             return;

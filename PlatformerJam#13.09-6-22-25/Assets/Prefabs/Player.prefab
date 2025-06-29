@@ -114,6 +114,7 @@ MonoBehaviour:
   CurrentHP: 0
   canEat: 0
   deathPanel: {fileID: 0}
+  isDead: 0
 --- !u!114 &1233118705992948092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meleeDamage: 20
-  attackRange: 2
+  attackRange: 1.5
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -248,8 +249,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.96875, y: 0.9375}
+  m_Offset: {x: -0.032765925, y: -0.0113419}
+  m_Size: {x: 0.9461864, y: 0.9537477}
   m_Direction: 0
 --- !u!70 &2577154919116241108
 CapsuleCollider2D:
@@ -283,8 +284,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1.1, y: 1.1}
+  m_Offset: {x: -0.0075614154, y: -0.017643124}
+  m_Size: {x: 0.96130925, y: 0.96130925}
   m_Direction: 0
 --- !u!95 &2626355824470333646
 Animator:
@@ -324,20 +325,18 @@ MonoBehaviour:
   m_HasRenderer: 1
   m_UseRendererSilhouette: 1
   m_CastsShadows: 1
-  m_SelfShadows: 1
+  m_SelfShadows: 0
   m_ApplyToSortingLayers: b1886a2a000000007d53ec7a
   m_ShapePath:
-  - {x: -0.484375, y: -0.46875, z: 0}
-  - {x: -0.4865352, y: 0.47307038, z: 0}
-  - {x: 0.484375, y: 0.46875, z: 0}
-  - {x: 0.49737418, y: -0.05316603, z: 0}
-  - {x: 0.31591588, y: -0.014282107, z: 0}
-  - {x: 0.39368373, y: -0.24110508, z: 0}
-  - {x: 0.4325676, y: -0.42472363, z: 0}
-  - {x: 0.13874008, y: -0.46875, z: 0}
-  m_ShapePathHash: 19334876
+  - {x: -0.45569283, y: 0.0267227, z: 0}
+  - {x: -0.47293943, y: 0.06737694, z: 0}
+  - {x: -0.38175622, y: 0.05995433, z: 0}
+  - {x: 0.48126, y: 0.08267811, z: 0}
+  - {x: 0.48115695, y: 0.033695392, z: 0}
+  - {x: 0.28280532, y: 0.032973826, z: 0}
+  m_ShapePathHash: -805163028
   m_Mesh: {fileID: 0}
-  m_InstanceId: 30626
+  m_InstanceId: -20460
   m_LocalBounds:
-    m_Center: {x: 0.0054194927, y: 0.0021601915, z: 0}
-    m_Extent: {x: 0.49195468, y: 0.4709102, z: 0}
+    m_Center: {x: 0.004160285, y: 0.054700404, z: 0}
+    m_Extent: {x: 0.47709972, y: 0.027977705, z: 0}
