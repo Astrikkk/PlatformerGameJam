@@ -33,17 +33,27 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float projectileSpeed = 7f;
     [SerializeField] private int projectileDamage = 1;
 
+    private Color originalColor;
+    private bool isFlashing = false;
+    [SerializeField] private float flashDuration = 0.2f;
+    [SerializeField] private int flashCount = 3;
+    [SerializeField] private Sprite deadSprite;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        player = FindAnyObjectByType<PlayerScript>().transform;
+        originalColor = spriteRenderer.color;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void FixedUpdate()
     {
-        if (isDead) return;
+        if (isDead)
+        {
+            return;
+        }
 
         if (HpCount <= 0) Death();
 
@@ -91,7 +101,7 @@ public class EnemyController : MonoBehaviour
             Patrol();
         }
     }
-    
+
 
     void Patrol()
     {
@@ -121,6 +131,7 @@ public class EnemyController : MonoBehaviour
 
         ModifyHP(-amount);
         ApplyKnockback(damageSourcePosition);
+        if (!isFlashing) StartCoroutine(FlashRed());
     }
 
     private void ApplyKnockback(Vector2 damageSourcePosition)
@@ -187,12 +198,31 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private IEnumerator FlashRed()
+    {
+        isFlashing = true;
+        for (int i = 0; i < flashCount; i++)
+        {
+            spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(flashDuration);
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(flashDuration);
+        }
+        isFlashing = false;
+    }
+
     void Death()
     {
-        //anim dead body
+        animator.SetBool("isDead", false);
+        animator.SetBool("isMoving", false);
+        animator.ResetTrigger("Attacking");
         animator.SetTrigger("Die");
+
+        spriteRenderer.sprite = deadSprite;
+        Destroy(animator);
+        StopAllCoroutines();
+
         isDead = true;
-        StartDisappearing();
     }
 
     public void StartDisappearing()

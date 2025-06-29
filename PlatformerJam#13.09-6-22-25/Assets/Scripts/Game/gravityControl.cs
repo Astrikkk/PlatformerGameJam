@@ -23,8 +23,6 @@ public class gravityControl : MonoBehaviour
         {
             StartCoroutine(RandomInvertCoroutine());
         }
-
-        Enemies = FindObjectsOfType<EnemyController>();
     }
 
     public void InvertGravityForAllRigidbodies()
@@ -53,6 +51,7 @@ public class gravityControl : MonoBehaviour
     {
         InvertGravityForAllRigidbodies();
         player.InvertGravity();
+        Enemies = FindObjectsOfType<EnemyController>();
         if (Enemies.Length  > 0)
         {
             foreach (EnemyController enemy in Enemies)

@@ -106,12 +106,13 @@ MonoBehaviour:
   maxHP: 100
   hpRegenRate: 50
   hpBar: {fileID: 0}
-  knockbackForce: 5
+  knockbackForce: 2
   flashDuration: 0.2
   flashCount: 3
   CurrentHP: 0
   canEat: 0
   deathPanel: {fileID: 0}
+  isDead: 0
 --- !u!114 &1233118705992948092
 MonoBehaviour:
   m_ObjectHideFlags: 0

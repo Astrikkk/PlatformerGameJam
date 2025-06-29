@@ -6,7 +6,7 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     [SerializeField] protected bool isActive = false;
-    [SerializeField] protected GameObject ObjectsUI; // put canvas here
+    [SerializeField] protected GameObject ObjectsUI;
 
     void Start()
     {
