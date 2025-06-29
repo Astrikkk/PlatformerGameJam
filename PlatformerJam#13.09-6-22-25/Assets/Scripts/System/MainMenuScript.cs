@@ -26,6 +26,7 @@ public class MainMenuScript : MonoBehaviour
 
     private bool ExpectsInput = false;
     private bool ConfirmQuit = false;
+    private bool isChoosingGame = false;
 
     public GameMenuState state;
     private GameManager gmanager;
@@ -49,28 +50,51 @@ public class MainMenuScript : MonoBehaviour
         if(state == GameMenuState.Main) {
             if (ConfirmQuit == false)
             {
-                switch (command)
+                if (isChoosingGame == false)
                 {
-                    case ("1"):
-                        Debug.Log("StartGame");
-                        gmanager.LoadScene("Game");
-                        break;
-                    case ("2"):
-                        Debug.Log("Options");
-                        GoToSettings();
-                        break;
-                    case ("3"):
-                        Debug.Log("Info");
-                        GoToInfo();
-                        break;
-                    case ("4"):
-                        Debug.Log("Exiting game");
-                        mainText.text += "\r\n Confirm exiting: \r\n Options: \r\n (Y) Confirm \r\n (N) No";
-                        ConfirmQuit = true;
-                        break;
-                    default:
-                        mainText.text += "\r\n ERROR - answer not found";
-                        break;
+                    switch (command)
+                    {
+                        case ("1"):
+                            Debug.Log("StartGame");
+                            isChoosingGame = true;
+                            mainText.text += "\r\n Choose: \r\n Options: \r\n (1) Start new game \r\n (2) Continue old session";
+                            break;
+                        case ("2"):
+                            Debug.Log("Options");
+                            GoToSettings();
+                            break;
+                        case ("3"):
+                            Debug.Log("Info");
+                            GoToInfo();
+                            break;
+                        case ("4"):
+                            Debug.Log("Exiting game");
+                            mainText.text += "\r\n Confirm exiting: \r\n Options: \r\n (Y) Confirm \r\n (N) No";
+                            ConfirmQuit = true;
+                            break;
+                        default:
+                            mainText.text += "\r\n ERROR - answer not found";
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (command)
+                    {
+                        case ("1"):
+                            SaveManager.DeleteSave();
+                            gmanager.LoadScene("FinalGame");
+                            GoToMain();
+                            break;
+                        case ("2"):
+                            gmanager.LoadScene("FinalGame");
+                            break;
+                        default:
+                            GoToMain();
+                            mainText.text += "\r\n Exit was denied";
+                            break;
+                    }
+                    ConfirmQuit = false;
                 }
             }
             else

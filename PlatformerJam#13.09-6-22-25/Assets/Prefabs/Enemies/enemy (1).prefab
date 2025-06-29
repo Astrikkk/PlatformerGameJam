@@ -137,6 +137,7 @@ MonoBehaviour:
   isEdible: 1
   isDead: 0
   isWarrior: 1
+  isEnemy: 1
   speed: 1
   detectionRange: 6
   spot: 0

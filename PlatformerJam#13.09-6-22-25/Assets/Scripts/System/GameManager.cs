@@ -5,17 +5,23 @@ public class GameManager : MonoBehaviour
 {
     private SaveData saveData;
     RegionManager regionManager;
+    public GameObject WinMenu;
+    public GameObject LooseMenu;
+    public bool isMenu = false;
 
     private void Awake()
     {
-        saveData = SaveManager.LoadGame();
+        if (isMenu == false)
+        {
+            saveData = SaveManager.LoadGame();
 
-        GameObject player = FindAnyObjectByType<PlayerScript>().gameObject;
-        player.transform.position = saveData.GetPositionVector();
-        regionManager = FindAnyObjectByType<RegionManager>();
-        regionManager.CurrentRegionID = saveData.CurrentLevel;
+            GameObject player = FindAnyObjectByType<PlayerScript>().gameObject;
+            player.transform.position = saveData.GetPositionVector();
+            regionManager = FindAnyObjectByType<RegionManager>();
+            regionManager.CurrentRegionID = saveData.CurrentLevel;
 
-        Debug.Log($"Loaded - Level: {saveData.CurrentLevel}, Position: {player.transform.position}");
+            Debug.Log($"Loaded - Level: {saveData.CurrentLevel}, Position: {player.transform.position}");
+        }
     }
 
     public void SaveCurrentState(int currentLevel, Vector3 playerPosition)
@@ -59,7 +65,10 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        SaveCurrentState(regionManager.CurrentRegionID, player.transform.position);
+        if (isMenu == false)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            SaveCurrentState(regionManager.CurrentRegionID, player.transform.position);
+        }
     }
 }

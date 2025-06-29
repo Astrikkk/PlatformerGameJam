@@ -115,14 +115,17 @@ public class EnemyController : MonoBehaviour
 
     void Patrol()
     {
-        transform.position = Vector3.MoveTowards(transform.position, moveSpots[spot].position, speed * Time.deltaTime);
-
-        if (Vector2.Distance(transform.position, moveSpots[spot].position) <= 1f)
+        if (moveSpots.Length > 0)
         {
-            if (spot == 1)
-                spot = 0;
-            else if (spot == 0)
-                spot = 1;
+            transform.position = Vector3.MoveTowards(transform.position, moveSpots[spot].position, speed * Time.deltaTime);
+
+            if (Vector2.Distance(transform.position, moveSpots[spot].position) <= 1f)
+            {
+                if (spot == 1)
+                    spot = 0;
+                else if (spot == 0)
+                    spot = 1;
+            }
         }
     }
 

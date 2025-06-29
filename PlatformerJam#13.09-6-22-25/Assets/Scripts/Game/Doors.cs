@@ -25,6 +25,7 @@ public class Doors : MonoBehaviour
         if (!isOpening && !isOpen)
         {
             StartCoroutine(OpenDoors());
+            Invoke("Close", 5);
         }
     }
 
@@ -84,5 +85,12 @@ public class Doors : MonoBehaviour
 
         isOpening = false;
         isOpen = false;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            Open();
+        }
     }
 }

@@ -114,7 +114,7 @@ public class PlayerScript : MonoBehaviour
     void Death()
     {
         animator.SetTrigger("Die");
-        deathPanel.SetActive(true);
+        FindAnyObjectByType<GameManager>().LooseMenu.SetActive(true);
         GetComponent<PlayerMovement>().enabled = false;
         GetComponent<Animator>().enabled = false;
         GetComponent<PlayerCombat>().enabled = false;

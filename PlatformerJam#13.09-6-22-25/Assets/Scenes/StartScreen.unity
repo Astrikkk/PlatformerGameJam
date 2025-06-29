@@ -3108,6 +3108,8 @@ GameObject:
   - component: {fileID: 2027105612}
   - component: {fileID: 2027105614}
   - component: {fileID: 2027105613}
+  - component: {fileID: 2027105616}
+  - component: {fileID: 2027105615}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3164,8 +3166,8 @@ MonoBehaviour:
 
     (2) Return to main menu'
   infoString: "GAME - MISSION: XION-X21\r\nDevelopers - Astragor, Chipy, Nathan,
-    zombielovejuice64, BlackPossum, cc.cretina\r\nMade for: Platformer Game Jam (72-Hour
-    Challenge)\r\nEngine: Unity\r\nGenre: Horror Platformer with Reverse Perspective\r\nEstimated
+    zombielovejuice64, BlackPossum, cc.cretina\r\nMade for: Platformer Game Jam (7
+    days Challenge)\r\nEngine: Unity\r\nGenre: Horror Platformer with Reverse Perspective\r\nEstimated
     Playtime: 15-20 minutes\r\n\r\n/// STATION LOG ENTRY #X21-477 ///\r\nAbout the
     game: The deep space research station Xion-X21 went dark 73 days ago. \r\nWhen
     the rescue team arrives, they find the facility in ruins - \r\ncorridors breached
@@ -3185,17 +3187,12 @@ MonoBehaviour:
     View controls"
   controlsString: "//////////////////////////////////////////\r\n  CONTROLS - mission
     XION-X21\r\n//////////////////////////////////////////\r\n\r\n[ MOVEMENT ]\r\n\u25BA
-    WASD/Arrow Keys  - Navigate the station\r\n\u25BA SPACE            - Leap/Special
-    ability\r\n\u25BA SHIFT            - Sprint (consumes energy)\r\n\r\n[ HUNTING
-    MODE ]\r\n\u25BA MOUSE AIM        - Direct your appendages\r\n\u25BA LEFT CLICK      
-    - Primary attack\r\n\u25BA RIGHT CLICK      - Special mutation\r\n\u25BA R               
-    - Toggle camouflage\r\n\r\n[ ENVIRONMENT ]\r\n\u25BA E                - Interact/Open
-    doors\r\n\u25BA Q                - Environmental scan\r\n\u25BA TAB             
-    - View station map\r\n\r\n[ SYSTEM ]\r\n\u25BA ESC              - Pause/Station
-    menu\r\n\u25BA F                - Toggle flashlight\r\n\u25BA M               
-    - Mute audio logs\r\n\r\n\u26A0 WARNING:\r\nSome control functions may evolve\r\nas
-    the organism adapts to its host.\r\n\r\nOptions:\r\n (1) Return to Main Menu
-    \r\n (2) return to info "
+    WASD/Arrow Keys  - Navigate the station\r\n\u25BA SPACE            - Jump\r\n\u25BA
+    SHIFT            - Dash\r\n\r\n[ Eating ] -- regenerates HP\r\r\n\u25BA E - Eat
+    - go to the nearest dead enemy and spum this button \r\n\r\n[ Attack ]\r\n\u25BA
+    F - attack\r\n\r\n\r[ Stamina ]  -- stay on one place to regenerate\n\u26A0 WARNING:\r\nSome
+    control functions may evolve\r\nas the organism adapts to its host.\r\n\r\nOptions:\r\n
+    (1) Return to Main Menu \r\n (2) return to info "
   mainText: {fileID: 597637580}
   inputField: {fileID: 1937803823}
   state: 0
@@ -3211,6 +3208,124 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01d19ca78bc23af4eb6af7804a561742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WinMenu: {fileID: 0}
+  LooseMenu: {fileID: 0}
+  isMenu: 1
+--- !u!114 &2027105615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027105610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ce4e98ac4e4b6b4aa343516d93b24fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicClips:
+  - {fileID: 8300000, guid: 1be3157b78015ef4f9ce24289c9c66fd, type: 3}
+  - {fileID: 8300000, guid: ea92381301d13324c87c5f1b65a54424, type: 3}
+  - {fileID: 8300000, guid: ff98f608c7a54bd4a82e4dc3f3bb65c7, type: 3}
+  intervalMinutes: 1
+  playOnStart: 1
+  shuffle: 1
+--- !u!82 &2027105616
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027105610}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2028963764
 GameObject:
   m_ObjectHideFlags: 0
